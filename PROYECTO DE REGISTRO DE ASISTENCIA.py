@@ -1,12 +1,13 @@
 from colorama import init, Fore , Style 
 init()
 asistencias = [] #Se crea una lista vacia para almacenar los registros de asistencia y puntualidad de los trabajadores.
+empleados=[]
 titulo = "GRUPO EMPRESARIAL PROACTTIVO S.A.S Registro De Asistencia y Puntualidad"
-print("\n" + Fore.CYAN + "=" * 80) #Aqui se agrega el color cyan para que s evea mas llamativo el titulo a la hora de modificarlo.
+print("\n" + Fore.CYAN + "=" * 80) #Aqui se agrega el color cyan para que se vea mas llamativo el titulo a la hora de modificarlo.
 print(titulo.center(80))
 print("=" * 80 + Style.RESET_ALL+"\n") # Aqui se imprime una line de 80 caracteres para que a la hora de codificar se codifique centrado y tenga una buena estructura.
 
-#A continucacion se empezara creando una contraseña para que la empresa pueda acceder a la pagina de registro de asistencia y puntualidad.
+#Acontinuación se empezara creando una contraseña para que la empresa pueda acceder a la pagina de registro de asistencia y puntualidad.
 import getpass
 subtitulo= "ACCESO SEGURO A LA EMPRESA"
 print("\n" + "=" * 50)
@@ -42,27 +43,58 @@ while True:
     mostrar_menu()#Aqui se llama a la funcion que se creo anteriormente para mostrar el menu de registro de asistencia y puntualidad.
     opcion = input("Seleccione la opcion que desea elegir: ")
     if opcion == "1":
-        nombre =input("ingrese el nombre del empleado: ").strip()
-        while nombre:
-            print("A continuacion este es el nombre que ingreso" , nombre)
-            if nombre ==
-                hora = input("Ingrese en la que el trabajador ingreso (HH:MM): ")
-                fecha = input("Ingrese la fecha de ingreso (DD/MM/AAAA): ")
-                estado = input("Ingrese el trabajador llego puntual,tarde o no llego): ").upper()
+        while True:
+            nombre = input("Ingrese el nombre del empleado: ").strip().capitalize()
+            documento = input("Ingrese el documento del empleado: ").strip() #Aqui se pide al usuario que ingrese el nombre y el documento del empleado y se utiliza .strip() para eliminar los espacios en blanco al inicio y al final de la cadena.
+            cargo = input("Ingrese el cargo del empleado: ").strip().capitalize()
+             #Aqui se hace un proceso para que verifique si el empleado ingresado ya existe en la lista de empleados.
+            existe = False
+            for emp in empleados:
+                 if emp [0] == nombre and emp[1] == documento:
+                     existe = True
+                     break
+                 if not existe: #Si el empleado no existe, se agrega a la lista de empleados.
+                     empleados.append((nombre, documento, cargo))
+                     print(Fore.GREEN + "Empleado registrado correctamente." + Style.RESET_ALL)
+                     break
+                 if not existe:
+                     empleados.append((nombre, documento, cargo))
+                     print(f"Empleado {nombre} registrado correctamente.")
+                 else:
+                        print(Fore.YELLOW + f"El empleado {nombre} ya está registrado." + Style.RESET_ALL)
+                        continue
+            hora = input("Ingrese en la hora que el trabajador ingreso (HH:MM): ").strip()
+            fecha = input("Ingrese la fecha de ingreso (DD/MM/AAAA): ").strip()
+            ya_existe = any (r['nombre'] == nombre and r['fecha'] == fecha for r in asistencias) #
+            if ya_existe: #Aqui se verifica si ya existe un registro de asistencia para el trabajador en la fecha ingresada.
+              print(Fore.YELLOW + "ya existe un registro de asistencia para este trabajador en esa fecha.")
+              continue #Si ya existe un registro, se utiliza continue para volver al inicio del ciclo y pedir al usuario que ingrese los datos nuevamente.
+            #Clasificamos estado
+            if hora == "": #Aqui se verifica si la hora ingresada esta vacia, si es asi se clasifica el estado como "NO LLEGO".
+                estado = "AUSENTE"
+            elif hora <= "08:00": #Si la hora ingresada es menor o igual a las 08:00, se clasifica el estado como "PUNTUAL".
+                    estado = "PUNTUAL"
+            elif hora > "08:00": 
+                    estado = "TARDE"
+            else:
+                    print("El dato ingresado no es valido.")
+                    print(f"el trabajador {nombre.capitalize()}  fue clasificado la hora de entrada el cual fue {hora} y la fecha de ingreso {fecha} como {estado}.") #Aqui se imprime el nombre del trabajador, la hora de entrada y la fecha de ingreso junto con el estado de asistencia.
                 #guardar el registro
-                asistencias.append({
-                    "nombre": nombre.capitalize(),
-                    "hora": hora,
-                    "fecha": fecha,
-                    "estado": estado
-                })
-                otro = input("¿Desea registrar la asistencia de otro trabajador? [SI] [NO]: ").strip().upper() #Aqui se pide al usuario si desea registrar la asistencia de otro trabajador y se utiliza strip para eliminar los espacios en blanco y upper para convertir la respuesta en mayuscula.
-                if otro != "SI":
-                    print("A continuacion se  devolvera al menu de registro de asistencia ypuntualidad")
-                    continue #Aqui se utiliza continue para volver al menu de registro de asistencia y puntualidad
-                elif otro == "NO":
-                    print("Volviendo al menun principal...")
-                    break #Aqui se utiliza break para salir del ciclo y volver al menu principal
+            asistencias.append({
+    "nombre": nombre.capitalize(),
+    "documento": documento,    # <-- agrega esto
+    "hora": hora if hora else "No llego",
+    "fecha": fecha,
+    "estado": estado
+})
+            otro = input("¿Desea registrar la asistencia de otro trabajador? [SI] [NO]: ").strip().upper() #Aqui se pide al usuario si desea registrar la asistencia de otro trabajador y se utiliza strip para eliminar los espacios en blanco y upper para convertir la respuesta en mayuscula.
+            if otro == "NO":
+                    print("A continuacion se  devolvera al menu de registro de asistencia y puntualidad")
+                    break #Si el usuario ingresa "NO", se imprime un mensaje y se utiliza break para salir del ciclo y volver al menu principal.
+            elif otro == "SI":
+                continue
+            else:
+                print(Fore.RED + "Opción inválida. Por favor, ingrese 'SI' o 'NO'." + Style.RESET_ALL)
             # Opción 2: Ver historial de asistencia
     elif opcion == "2":
         print("\n  Historial de asistencia:")
@@ -70,7 +102,7 @@ while True:
             print("No hay registros todavía.")
         else:
             for registro in asistencias:
-                print(f"{registro['nombre']} / {registro['hora']} / {registro['fecha']} → LLEGÓ {registro['estado']}")
+                print(f"{registro['nombre']} / {registro['documento']} / {registro['hora']} / {registro['fecha']} → LLEGÓ {registro['estado']}")
 
         volver = input("\n¿Desea volver al menú? [SI] / [NO]: ").upper()
         if volver != "SI":
@@ -80,21 +112,21 @@ while True:
     # Opción 3: Calcular porcentaje de puntualidad por empleado
     elif opcion == "3":
         while True:
-            trabajador = input("Ingrese el trabajador del cual desea saber el porcentaje de puntualidad: ").capitalize()
+            nombre_buscado = input("Ingrese el trabajador del cual desea saber el porcentaje de puntualidad: ").capitalize()
             total = 0
             puntuales = 0
 
             for r in asistencias:
-                if r['nombre'] == trabajador:
+                if r['nombre'] == nombre_buscado:
                     total += 1
                     if r['estado'] == "PUNTUAL":
-                        puntuales += 1
+                        puntuales += 1 
 
             if total > 0:
                 porcentaje = round((puntuales / total) * 100, 2)
-                print(f" El trabajador {trabajador} obtuvo un porcentaje de puntualidad de {porcentaje}%")
+                print(f" El trabajador {nombre_buscado} obtuvo un porcentaje de puntualidad de {porcentaje}%")
             else:
-                print(f" No se encontraron registros para {trabajador}.")
+                print(f" No se encontraron registros para {nombre_buscado}.")
 
             seguir = input("¿Desea saber el porcentaje de otro trabajador? [SI] / [NO]: ").upper()
             if seguir != "SI":
@@ -103,29 +135,32 @@ while True:
     # Opción 4: Generar informe semanal
     elif opcion == "4":
         print("\n Informe semanal de puntualidad:")
-        empleados = {}
+        resumen = {}
 
         for r in asistencias:
             nombre = r["nombre"]
-            if nombre not in empleados:
-                empleados[nombre] = {"total": 0, "puntuales": 0}
-            empleados[nombre]["total"] += 1
+            if nombre not in resumen:
+                resumen[nombre] = {"total": 0, "puntuales": 0}
+            resumen[nombre]["total"] += 1
             if r["estado"] == "PUNTUAL":
-                empleados[nombre]["puntuales"] += 1
-
-        for nombre, datos in empleados.items():
-            porcentaje = round((datos["puntuales"] / datos["total"]) * 100, 2)
-            print(f"- {nombre} obtuvo un {porcentaje}% de cumplimiento")
-
-        volver = input("\n¿Desea volver al menú? [SI] / [NO]: ").upper()
-        if volver != "SI":
-            print(" Saliendo del programa.")
-            break
-
-    # Opción 5: Salir
+                resumen[nombre]["puntuales"] += 1
+            
+            if not resumen:
+                print("No hay registros de asistencia para generar el informe.")
+                continue
+            else:
+                for nombre , datos in resumen.items():
+                    porcentaje = round((datos["puntuales"] / datos["total"]) * 100, 2)
+                    print(f"- {nombre} obtuvo un {porcentaje}% de cumplimiento")
+                    volver = input("\n¿Desea volver al menú? [SI] / [NO]: ").upper()
+                    if volver != "SI":
+                        print(" Saliendo del programa.")
+                        break
     elif opcion == "5":
-        print("\n Saliendo del menú. ¡Hasta luego!")
-        break
-
+                        print("\n Saliendo del menú. ¡Hasta luego!")
+                        break
     else:
-        print(" Opción inválida. Intente nuevamente.")
+              print(" Opción inválida. Intente nuevamente.")
+                        
+
+       
