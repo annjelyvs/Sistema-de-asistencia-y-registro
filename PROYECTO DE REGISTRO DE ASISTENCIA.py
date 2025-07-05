@@ -7,8 +7,7 @@ print("\n" + Fore.CYAN + "=" * 80) #Aqui se agrega el color cyan para que se vea
 print(titulo.center(80))
 print("=" * 80 + Style.RESET_ALL+"\n") # Aqui se imprime una line de 80 caracteres para que a la hora de codificar se codifique centrado y tenga una buena estructura.
 
-#Acontinuación se empezara creando una contraseña para que la empresa pueda acceder a la pagina de registro de asistencia y puntualidad.
-import getpass
+#Acontinuación se empezara creando una contraseña para que la empresa pueda acceder a la pagina de registro de asistencia y puntualidad
 subtitulo= "ACCESO SEGURO A LA EMPRESA"
 print("\n" + "=" * 50)
 print(subtitulo.center(50))
@@ -149,7 +148,7 @@ while True:
                 print("No hay registros de asistencia para generar el informe.")
                 continue
             else:
-                for nombre , datos in resumen.items():
+                for nombre , datos in resumen.items(): #"items" devuelve una lista de tuplas que contienen las claves y valores del diccionario.
                     porcentaje = round((datos["puntuales"] / datos["total"]) * 100, 2)
                     print(f"- {nombre} obtuvo un {porcentaje}% de cumplimiento")
                     volver = input("\n¿Desea volver al menú? [SI] / [NO]: ").upper()
