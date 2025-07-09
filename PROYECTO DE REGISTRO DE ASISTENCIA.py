@@ -62,7 +62,7 @@ while True:
                  else:
                         print(Fore.YELLOW + f"El empleado {nombre} ya está registrado." + Style.RESET_ALL)
                         continue
-            hora = input("Ingrese en la hora que el trabajador ingreso (HH:MM): ").strip()
+            hora = input("Ingrese en la hora que el trabajador ingreso (HH:MM): (Ingrese un minimo de hora de 24 horas en formato de 12 horas)").strip()
             fecha = input("Ingrese la fecha de ingreso (DD/MM/AAAA): ").strip()
             ya_existe = any (r['nombre'] == nombre and r['fecha'] == fecha for r in asistencias) #
             if ya_existe: #Aqui se verifica si ya existe un registro de asistencia para el trabajador en la fecha ingresada.
@@ -112,8 +112,8 @@ while True:
     elif opcion == "3":
         while True:
             nombre_buscado = input("Ingrese el trabajador del cual desea saber el porcentaje de puntualidad: ").capitalize()
-            total = 0
-            puntuales = 0
+            total = 0 #Total de registros del empleado
+            puntuales = 0 #veces que fue puntual
 
             for r in asistencias:
                 if r['nombre'] == nombre_buscado:
