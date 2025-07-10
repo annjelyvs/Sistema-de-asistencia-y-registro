@@ -2,7 +2,7 @@ from colorama import init, Fore , Style
 init()
 asistencias = [] #Se crea una lista vacia para almacenar los registros de asistencia y puntualidad de los trabajadores.
 empleados=[]
-titulo = "GRUPO EMPRESARIAL PROACTTIVO S.A.S Registro De Asistencia y Puntualidad"
+titulo = "GRUPO EMPRESARIAL PROACTIVA S.A.S Registro De Asistencia y Puntualidad"
 print("\n" + Fore.CYAN + "=" * 80) #Aqui se agrega el color cyan para que se vea mas llamativo el titulo a la hora de modificarlo.
 print(titulo.center(80))
 print("=" * 80 + Style.RESET_ALL+"\n") # Aqui se imprime una line de 80 caracteres para que a la hora de codificar se codifique centrado y tenga una buena estructura.
@@ -46,28 +46,28 @@ while True:
             nombre = input("Ingrese el nombre del empleado: ").strip().capitalize()
             documento = input("Ingrese el documento del empleado: ").strip() #Aqui se pide al usuario que ingrese el nombre y el documento del empleado y se utiliza .strip() para eliminar los espacios en blanco al inicio y al final de la cadena.
             cargo = input("Ingrese el cargo del empleado: ").strip().capitalize()
-             #Aqui se hace un proceso para que verifique si el empleado ingresado ya existe en la lista de empleados.
+            #Aqui se hace un proceso para que verifique si el empleado ingresado ya existe en la lista de empleados.
             existe = False
             for emp in empleados:
-                 if emp [0] == nombre and emp[1] == documento:
-                     existe = True
-                     break
-                 if not existe: #Si el empleado no existe, se agrega a la lista de empleados.
-                     empleados.append((nombre, documento, cargo))
-                     print(Fore.GREEN + "Empleado registrado correctamente." + Style.RESET_ALL)
-                     break
-                 if not existe:
-                     empleados.append((nombre, documento, cargo))
-                     print(f"Empleado {nombre} registrado correctamente.")
-                 else:
+                if emp [0] == nombre and emp[1] == documento:
+                    existe = True
+                    break
+                if not existe: #Si el empleado no existe, se agrega a la lista de empleados.
+                    empleados.append((nombre, documento, cargo))
+                    print(Fore.GREEN + "Empleado registrado correctamente." + Style.RESET_ALL)
+                    break
+                if not existe:
+                    empleados.append((nombre, documento, cargo))
+                    print(f"Empleado {nombre} registrado correctamente.")
+                else:
                         print(Fore.YELLOW + f"El empleado {nombre} ya está registrado." + Style.RESET_ALL)
                         continue
-            hora = input("Ingrese en la hora que el trabajador ingreso (HH:MM): (Ingrese un minimo de hora de 24 horas en formato de 12 horas)").strip()
+            hora = input("Ingrese en la hora que el trabajador ingreso (HH:MM): (Ingrese un minimo de hora de 24 horas en formato de 12 horas): ").strip()
             fecha = input("Ingrese la fecha de ingreso (DD/MM/AAAA): ").strip()
             ya_existe = any (r['nombre'] == nombre and r['fecha'] == fecha for r in asistencias) #
             if ya_existe: #Aqui se verifica si ya existe un registro de asistencia para el trabajador en la fecha ingresada.
-              print(Fore.YELLOW + "ya existe un registro de asistencia para este trabajador en esa fecha.")
-              continue #Si ya existe un registro, se utiliza continue para volver al inicio del ciclo y pedir al usuario que ingrese los datos nuevamente.
+                print(Fore.YELLOW + "ya existe un registro de asistencia para este trabajador en esa fecha.")
+                continue #Si ya existe un registro, se utiliza continue para volver al inicio del ciclo y pedir al usuario que ingrese los datos nuevamente.
             #Clasificamos estado
             if hora == "": #Aqui se verifica si la hora ingresada esta vacia, si es asi se clasifica el estado como "NO LLEGO".
                 estado = "AUSENTE"
@@ -135,31 +135,25 @@ while True:
     elif opcion == "4":
         print("\n Informe semanal de puntualidad:")
         resumen = {}
-
         for r in asistencias:
             nombre = r["nombre"]
             if nombre not in resumen:
                 resumen[nombre] = {"total": 0, "puntuales": 0}
-            resumen[nombre]["total"] += 1
+                resumen[nombre]["total"] += 1
             if r["estado"] == "PUNTUAL":
                 resumen[nombre]["puntuales"] += 1
-            
-            if not resumen:
-                print("No hay registros de asistencia para generar el informe.")
-                continue
-            else:
-                for nombre , datos in resumen.items(): #"items" devuelve una lista de tuplas que contienen las claves y valores del diccionario.
-                    porcentaje = round((datos["puntuales"] / datos["total"]) * 100, 2)
-                    print(f"- {nombre} obtuvo un {porcentaje}% de cumplimiento")
-                    volver = input("\n¿Desea volver al menú? [SI] / [NO]: ").upper()
-                    if volver != "SI":
-                        print(" Saliendo del programa.")
-                        break
+        if not resumen:
+            print("No hay registros de asistencia para generar el informe.")
+        else:
+            for nombre, datos in resumen.items():
+                porcentaje = round((datos["puntuales"] / datos["total"]) * 100, 2)
+                print(f"- {nombre} obtuvo un {porcentaje}% de cumplimiento")
+        volver = input("\n¿Desea volver al menú? [SI] / [NO]: ").upper()
+        if volver != "SI":
+            print(" Saliendo del programa.")
+            break
     elif opcion == "5":
                         print("\n Saliendo del menú. ¡Hasta luego!")
                         break
     else:
-              print(" Opción inválida. Intente nuevamente.")
-                        
-
-       
+        print(" Opción inválida. Intente nuevamente.")
