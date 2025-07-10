@@ -74,7 +74,7 @@ while True:
 
                 ya_existe = any(r['nombre'] == nombre and r['fecha'] == fecha for r in asistencias)
                 if ya_existe:#Aqui se verifica si ya existe un registro de asistencia para el trabajador en la fecha ingresada.
-                    print(Fore.YELLOW + "⚠ Ya existe un registro de asistencia para este trabajador en esa fecha." + Style.RESET_ALL)
+                    print(Fore.YELLOW + " Ya existe un registro de asistencia para este trabajador en esa fecha." + Style.RESET_ALL)
                     seguir = input("¿Desea registrar otra fecha? [SI] / [NO]: ").strip().upper()
                     if seguir != "SI":
                         break
@@ -96,7 +96,7 @@ while True:
                     "estado": estado
                 })
 
-                print(Fore.CYAN + f"\n✅ Registro guardado para {nombre} – {estado} ({fecha})" + Style.RESET_ALL)
+                print(Fore.CYAN + f"\n Registro guardado para {nombre}  {estado} ({fecha})" + Style.RESET_ALL)
 
                 repetir = input("¿Desea registrar otra fecha para este mismo trabajador? [SI] / [NO]: ").strip().upper()
                 if repetir != "SI":
